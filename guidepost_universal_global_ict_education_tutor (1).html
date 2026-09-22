@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-[#0B0F12] text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GuidePost - Universal Education & Career Learning Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0B0F12;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1F2E3D;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00FF66;
+    }
+    .neon-border {
+      box-shadow: 0 0 15px rgba(0, 255, 102, 0.15);
+    }
+    .neon-glow-btn {
+      box-shadow: 0 0 15px rgba(0, 255, 102, 0.25);
+      transition: all 0.2s ease-in-out;
+    }
+    .neon-glow-btn:hover {
+      box-shadow: 0 0 25px rgba(0, 255, 102, 0.5);
+      transform: translateY(-1px);
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(0, 255, 102, 0.3); }
+      50% { box-shadow: 0 0 30px rgba(0, 255, 102, 0.7); }
+    }
+    .pulse-glow {
+      animation: pulseGlow 2s infinite;
+    }
+    /* RTL Support for Arabic */
+    [dir="rtl"] {
+      text-align: right;
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col bg-[#0B0F12] text-slate-200 antialiased overflow-hidden selection:bg-[#00FF66] selection:text-black">
+
+  <!-- MANDATORY SIGN-IN / AUTH OVERLAY -->
+  <div id="authOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-[#0B0F12]/95 backdrop-blur-md p-4">
+    <div class="w-full max-w-md bg-[#141F28] border border-[#1F2E3D] rounded-2xl p-6 sm:p-8 shadow-2xl relative">
+      <div class="flex items-center justify-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-[#00FF66]/10 border border-[#00FF66]/30 flex items-center justify-center text-[#00FF66]">
+          <i data-lucide="compass" class="w-6 h-6"></i>
+        </div>
+        <h1 class="text-2xl font-extrabold text-white tracking-tight">Guide<span class="text-[#00FF66]">Post</span></h1>
+      </div>
+
+      <p id="i18n-auth-sub" class="text-center text-slate-400 text-sm mb-6">
+        Sign in or create an account to access universal global learning with GuidePost, connect with friends, and start AI voice calls.
+      </p>
+
+      <!-- Auth Tabs -->
+      <div class="flex bg-[#0B0F12] p-1 rounded-xl mb-6 border border-[#18222D]">
+        <button id="tabBtnSignIn" onclick="switchAuthTab('signin')" class="flex-1 py-2 text-xs font-semibold rounded-lg bg-[#141F28] text-[#00FF66] shadow transition">Sign In</button>
+        <button id="tabBtnSignUp" onclick="switchAuthTab('signup')" class="flex-1 py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition">Sign Up</button>
+      </div>
+
+      <!-- Sign In Form -->
+      <form id="signInForm" onsubmit="handleAuth(event, 'signin')" class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1" id="i18n-lbl-user">Username or Email</label>
+          <div class="relative">
+            <i data-lucide="user" class="w-4 h-4 absolute left-3 top-3 text-slate-500"></i>
+            <input type="text" id="authUsernameInput" required placeholder="e.g. Alex_Student" class="w-full pl-9 pr-3 py-2.5 bg-[#0B0F12] border border-[#1F2E3D] rounded-xl text-sm text-white placeholder-slate-600 focus:outline-none focus:border-[#00FF66]">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1" id="i18n-lbl-pass">Password</label>
+          <div class="relative">
+            <i data-lucide="lock" class="w-4 h-4 absolute left-3 top-3 text-slate-500"></i>
+            <input type="password" required placeholder="••••••••" class="w-full pl-9 pr-3 py-2.5 bg-[#0B0F12] border border-[#1F2E3D] rounded-xl text-sm text-white placeholder-slate-600 focus:outline-none focus:border-[#00FF66]">
+          </div>
+        </div>
+        <button type="submit" class="w-full py-3 bg-[#00FF66] text-slate-950 font-bold rounded-xl hover:bg-[#00e65c] transition neon-glow-btn flex items-center justify-center gap-2 mt-2">
+          <span id="i18n-btn-signin">Sign In to Continue</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </form>
+
+      <!-- Sign Up Form -->
+      <form id="signUpForm" onsubmit="handleAuth(event, 'signup')" class="space-y-4 hidden">
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Full Name</label>
+          <input type="text" id="signUpName" required placeholder="e.g. Jane Doe" class="w-full px-3 py-2.5 bg-[#0B0F12] border border-[#1F2E3D] rounded-xl text-sm text-white placeholder-slate-600 focus:outline-none focus:border-[#00FF66]">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Choose Username</label>
+          <input type="text" id="signUpUsername" required placeholder="e.g. GlobalLearner" class="w-full px-3 py-2.5 bg-[#0B0F12] border border-[#1F2E3D] rounded-xl text-sm text-white placeholder-slate-600 focus:outline-none focus:border-[#00FF66]">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Learning Track / Curriculum</label>
+          <select id="signUpCurriculum" class="w-full px-3 py-2.5 bg-[#0B0F12] border border-[#1F2E3D] rounded-xl text-sm text-white focus:outline-none focus:border-[#00FF66]">
+            <optgroup label="High School Curricula">
+              <option value="IGCSE">Cambridge / Edexcel IGCSE & A-Levels</option>
+              <option value="IB">International Baccalaureate (IB)</option>
+              <option value="CBC">CBC / CBE Competency ICT (Kenya)</option>
+              <option value="US_AP">US Common Core & AP Subjects</option>
+            </optgroup>
+            <optgroup label="Post-High School & Higher Ed">
+              <option value="UNI_CS">Computer Science & AI Degree</option>
+              <option value="UNI_BIZ">Business, Finance & MBA Essentials</option>
+              <option value="UNI_MED">Pre-Med & Healthcare Sciences</option>
+              <option value="VOC_TECH">Vocational Engineering & Energy Trades</option>
+            </optgroup>
+          </select>
+        </div>
+        <button type="submit" class="w-full py-3 bg-[#00FF66] text-slate-950 font-bold rounded-xl hover:bg-[#00e65c] transition neon-glow-btn flex items-center justify-center gap-2 mt-2">
+          <span>Create Free Account</span>
+          <i data-lucide="user-plus" class="w-4 h-4"></i>
+        </button>
+      </form>
+
+      <div class="mt-4 pt-4 border-t border-[#1F2E3D] text-center">
+        <button onclick="quickDemoLogin()" class="text-xs text-[#00FF66] hover:underline font-medium">
+          ⚡ Quick Demo Login as Student
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APPLICATION LAYOUT -->
+  <div class="flex-1 flex flex-col md:flex-row h-full overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-full md:w-80 bg-[#141F28] border-r border-[#1F2E3D] flex flex-col justify-between shrink-0 overflow-y-auto">
+      <div>
+        <!-- App Logo & Title -->
+        <div class="p-4 border-b border-[#1F2E3D] flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-[#00FF66]/10 border border-[#00FF66]/30 flex items-center justify-center text-[#00FF66]">
+              <i data-lucide="compass" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <span class="font-extrabold text-lg text-white tracking-tight">Guide<span class="text-[#00FF66]">Post</span></span>
+              <span class="block text-[10px] text-slate-400 -mt-1 font-mono">UNIVERSAL LEARNING v4.0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Language Selector Dropdown -->
+        <div class="p-3 bg-[#0B0F12]/80 m-3 rounded-xl border border-[#1F2E3D]">
+          <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1.5">
+            <i data-lucide="globe" class="w-3 h-3 text-[#00FF66]"></i>
+            <span id="i18n-lbl-lang">Language / اللغة</span>
+          </label>
+          <select id="languageSelect" onchange="changeLanguage(this.value)" class="w-full bg-[#141F28] border border-[#1F2E3D] text-xs font-semibold text-[#00FF66] rounded-lg px-2.5 py-2 focus:outline-none focus:border-[#00FF66]">
+            <option value="en">English (English)</option>
+            <option value="sw">Kiswahili (Swahili)</option>
+            <option value="es">Español (Spanish)</option>
+            <option value="fr">Français (French)</option>
+            <option value="ar">العربية (Arabic)</option>
+            <option value="zh">中文 (Mandarin)</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+            <option value="pt">Português (Portuguese)</option>
+            <option value="de">Deutsch (German)</option>
+          </select>
+        </div>
+
+        <!-- Universal Curriculum & Education Switcher Dropdown -->
+        <div class="p-3 bg-[#0B0F12]/80 mx-3 mb-3 rounded-xl border border-[#1F2E3D]">
+          <div class="flex items-center justify-between text-xs font-semibold mb-1 text-slate-300">
+            <span id="i18n-lbl-curr-title">Curriculum / Field:</span>
+            <span id="curriculumBadge" class="px-2 py-0.5 rounded-full bg-[#00FF66]/20 text-[#00FF66] text-[10px] border border-[#00FF66]/30 truncate max-w-[120px]">IGCSE</span>
+          </div>
+          <select id="globalCurriculumSelect" onchange="setGlobalCurriculum(this.value)" class="w-full bg-[#141F28] border border-[#1F2E3D] text-xs font-medium text-slate-200 rounded-lg px-2.5 py-2 focus:outline-none focus:border-[#00FF66]">
+            <optgroup label="High School & Secondary Curricula">
+              <option value="IGCSE">Cambridge / Edexcel IGCSE & A-Levels</option>
+              <option value="IB">IB (PYP / MYP / Diploma)</option>
+              <option value="CBC">CBC / CBE Competency (Kenya)</option>
+              <option value="KNEC">KNEC KCSE National System (Kenya)</option>
+              <option value="US_AP">US Common Core & AP Courses</option>
+              <option value="WASSCE">WAEC / WASSCE (West Africa)</option>
+              <option value="CAPS">CAPS Curriculum (South Africa)</option>
+              <option value="CBSE">CBSE / ICSE (India)</option>
+              <option value="FRENCH_BAC">French Baccalauréat</option>
+              <option value="GERMAN_ABI">German Abitur</option>
+
+              <option value="GULF">GCSE Gulf & Middle East</option>
+              <option value="UAE_SAUDI">National Curriculum UAE / KSA</option>
+              <option value="GAOKAO">China National / Gaokao</option>
+              <option value="JAPAN_MEXT">Japan MEXT Curriculum</option>
+              <option value="ACARA">Australian Curriculum (ACARA)</option>
+              <option value="NCEA">New Zealand NCEA</option>
+            </optgroup>
+            
+            <optgroup label="Post-High School: STEM & Technology Majors">
+              <option value="UNI_CS">Computer Science & AI Engineering</option>
+              <option value="UNI_CYBER">Cybersecurity & Ethical Hacking</option>
+              <option value="UNI_DATA">Data Science & Analytics</option>
+              <option value="UNI_SE">Software Engineering & DevOps</option>
+            </optgroup>
+
+            <optgroup label="Post-High School: Business & Finance Majors">
+              <option value="UNI_BIZ">Business Administration & MBA</option>
+              <option value="UNI_FINANCE">Accounting, Finance & Fintech</option>
+              <option value="UNI_MARKETING">Digital Marketing & Growth</option>
+            </optgroup>
+
+            <optgroup label="Post-High School: Health & Life Sciences">
+              <option value="UNI_MED">Pre-Med & General Medicine</option>
+              <option value="UNI_NURSING">Nursing & Allied Health</option>
+              <option value="UNI_PHARMA">Pharmacy & Biotech</option>
+            </optgroup>
+
+            <optgroup label="Post-High School: Creative & Vocational Trades">
+              <option value="UNI_DESIGN">UI/UX & Product Design</option>
+              <option value="VOC_ELEC">Electrical & Renewable Energy Tech</option>
+              <option value="VOC_HVAC">HVAC & Applied Engineering</option>
+              <option value="CERT_PMP">Project Management & Scrum</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="px-3 space-y-1">
+          <button onclick="switchView('tutor')" id="nav-tutor" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium bg-[#18222D] text-[#00FF66] border border-[#00FF66]/30 transition">
+            <i data-lucide="bot" class="w-4 h-4"></i>
+            <span id="i18n-nav-tutor">Universal AI Assistant</span>
+          </button>
+
+          <button onclick="switchView('friends')" id="nav-friends" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-[#18222D] transition relative">
+            <i data-lucide="users" class="w-4 h-4"></i>
+            <span id="i18n-nav-friends">Friends Network</span>
+            <span id="pendingBadge" class="hidden absolute right-3 px-1.5 py-0.5 text-[10px] font-bold bg-[#00FF66] text-black rounded-full">0</span>
+          </button>
+
+          <button onclick="switchView('profile')" id="nav-profile" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-[#18222D] transition">
+            <i data-lucide="user-cog" class="w-4 h-4"></i>
+            <span id="i18n-nav-profile">Account Profile</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Quick AI Call Launcher Banner -->
+      <div class="p-3">
+        <div class="bg-gradient-to-br from-[#18222D] to-[#0B0F12] border border-[#00FF66]/30 rounded-xl p-3 text-center relative overflow-hidden">
+          <p class="text-xs font-semibold text-slate-200 mb-2" id="i18n-banner-call">Live AI Voice Tutor Session</p>
+          <button onclick="startVoiceCall('GuidePost AI Tutor')" class="w-full py-2 px-3 bg-[#00FF66] hover:bg-[#00e65c] text-slate-950 font-bold rounded-lg text-xs transition flex items-center justify-center gap-2 neon-glow-btn">
+            <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
+            <span id="i18n-btn-call">Start Voice Call</span>
+          </button>
+        </div>
+
+        <!-- User Brief Footer -->
+        <div id="sidebarUserFooter" class="mt-3 pt-3 border-t border-[#1F2E3D] flex items-center justify-between text-xs">
+          <div class="flex items-center gap-2 overflow-hidden">
+            <div id="userAvatarSmall" class="w-7 h-7 rounded-full bg-[#00FF66]/20 border border-[#00FF66] text-[#00FF66] font-bold flex items-center justify-center text-xs shrink-0">
+              ?
+            </div>
+            <div class="truncate">
+              <p id="userNameSmall" class="font-semibold text-white truncate">Guest User</p>
+              <p id="userTagSmall" class="text-[10px] text-slate-400 truncate">@guest</p>
+            </div>
+          </div>
+          <button onclick="logout()" title="Sign Out" class="text-slate-500 hover:text-red-400 p-1">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT VIEW DISPLAY AREA -->
+    <main class="flex-1 bg-[#0B0F12] flex flex-col h-full overflow-hidden relative">
+
+      <!-- VIEW 1: AI TUTOR CHAT & VOICE ROOM -->
+      <section id="view-tutor" class="flex-1 flex flex-col h-full overflow-hidden">
+        <div class="px-6 py-4 bg-[#141F28] border-b border-[#1F2E3D] flex items-center justify-between shrink-0">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-[#00FF66]/10 border border-[#00FF66]/40 flex items-center justify-center text-[#00FF66] font-bold">
+              <i data-lucide="bot" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h2 class="font-bold text-white text-base flex items-center gap-2">
+                GuidePost AI Universal Tutor
+                <span class="w-2 h-2 rounded-full bg-[#00FF66] animate-ping"></span>
+              </h2>
+              <p class="text-xs text-slate-400" id="tutorSyllabusSub">Active Field: Cambridge / Edexcel IGCSE</p>
+            </div>
+          </div>
+
+          <button onclick="startVoiceCall('GuidePost AI Tutor')" class="px-4 py-2 bg-[#00FF66] text-slate-950 font-bold rounded-xl hover:bg-[#00e65c] transition text-xs flex items-center gap-2 neon-glow-btn">
+            <i data-lucide="mic" class="w-4 h-4"></i>
+            <span class="hidden sm:inline" id="i18n-top-btn-call">Voice Call</span>
+          </button>
+        </div>
+
+        <!-- Chat Conversation Area -->
+        <div id="chatMessagesContainer" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+          <div class="flex gap-3 max-w-2xl">
+            <div class="w-8 h-8 rounded-lg bg-[#00FF66]/20 border border-[#00FF66]/40 flex items-center justify-center text-[#00FF66] shrink-0">
+              <i data-lucide="bot" class="w-4 h-4"></i>
+            </div>
+            <div class="bg-[#141F28] border border-[#1F2E3D] p-4 rounded-2xl text-slate-200 text-sm leading-relaxed space-y-2">
+              <p class="font-semibold text-[#00FF66] text-xs">GuidePost AI System</p>
+              <p id="i18n-welcome-msg">Welcome to GuidePost! Ask me anything across high school subjects, university majors, post-secondary qualifications, or vocational paths. What would you like to learn today?</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Input Form -->
+        <div class="p-4 bg-[#141F28] border-t border-[#1F2E3D]">
+          <form onsubmit="handleSendMessage(event)" class="flex gap-2">
+            <input type="text" id="chatInput" placeholder="Ask anything about your curriculum, university major, or career path..." class="flex-1 bg-[#0B0F12] border border-[#1F2E3D] rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#00FF66]">
+            <button type="submit" class="px-5 bg-[#00FF66] text-slate-950 font-bold rounded-xl hover:bg-[#00e65c] transition flex items-center justify-center gap-2">
+              <i data-lucide="send" class="w-4 h-4"></i>
+              <span class="hidden sm:inline text-xs" id="i18n-btn-send">Send</span>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- VIEW 2: FRIEND NETWORK & CONNECTIONS -->
+      <section id="view-friends" class="flex-1 flex flex-col h-full overflow-hidden hidden">
+        <div class="px-6 py-4 bg-[#141F28] border-b border-[#1F2E3D] flex items-center justify-between shrink-0">
+          <div>
+            <h2 class="font-bold text-white text-base" id="i18n-friends-title">Friend Connections & Collaboration</h2>
+            <p class="text-xs text-slate-400" id="i18n-friends-sub">Send requests and accept peers to unlock direct messaging and audio calls.</p>
+          </div>
+        </div>
+
+        <div class="p-4 bg-[#0B0F12] border-b border-[#1F2E3D] flex flex-wrap gap-2">
+          <button onclick="switchFriendTab('my-friends')" id="fTabMy" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#00FF66] text-slate-950 transition">Accepted Friends</button>
+          <button onclick="switchFriendTab('requests')" id="fTabReq" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#141F28] text-slate-300 border border-[#1F2E3D] hover:border-[#00FF66]/40 transition relative">
+            Pending Requests
+            <span id="fTabReqBadge" class="hidden ml-1 px-1.5 py-0.2 bg-[#00FF66] text-black text-[10px] rounded-full">0</span>
+          </button>
+          <button onclick="switchFriendTab('add')" id="fTabAdd" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#141F28] text-slate-300 border border-[#1F2E3D] hover:border-[#00FF66]/40 transition">Find & Add Friends</button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 sm:p-6">
+          <!-- Sub-Tab 1: Connected Friends -->
+          <div id="subViewMyFriends" class="space-y-4">
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Connected Classmates</h3>
+            <div id="connectedFriendsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+
+          <!-- Sub-Tab 2: Pending Requests -->
+          <div id="subViewRequests" class="space-y-4 hidden">
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Incoming Friend Requests</h3>
+            <div id="pendingRequestsList" class="space-y-3"></div>
+          </div>
+
+          <!-- Sub-Tab 3: Add Friends -->
+          <div id="subViewAddFriends" class="space-y-6 hidden">
+            <div class="bg-[#141F28] p-4 rounded-2xl border border-[#1F2E3D]">
+              <label class="block text-xs font-medium text-slate-300 mb-2">Search Student by Username</label>
+              <div class="flex gap-2">
+                <input type="text" id="friendSearchInput" placeholder="Enter username (e.g. Alex_Student, Brenda_CBC, CS_Major)..." class="flex-1 bg-[#0B0F12] border border-[#1F2E3D] rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-[#00FF66]">
+                <button onclick="searchAndAddFriend()" class="px-4 bg-[#00FF66] text-slate-950 font-bold rounded-xl text-xs hover:bg-[#00e65c] transition">
+                  Send Request
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Suggested Global Peers</h3>
+              <div id="suggestedFriendsList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 3: PROFILE & SETTINGS -->
+      <section id="view-profile" class="flex-1 flex flex-col h-full overflow-y-auto p-6 hidden">
+        <div class="max-w-xl mx-auto w-full space-y-6">
+          <h2 class="text-xl font-bold text-white mb-2">Account Profile & Settings</h2>
+
+          <div class="bg-[#141F28] border border-[#1F2E3D] rounded-2xl p-6 space-y-6">
+            <div class="flex items-center gap-4">
+              <div id="profileAvatarBig" class="w-16 h-16 rounded-full bg-[#00FF66]/20 border-2 border-[#00FF66] text-[#00FF66] font-bold flex items-center justify-center text-2xl">
+                ?
+              </div>
+              <div>
+                <h3 id="profileName" class="text-lg font-bold text-white">Student Name</h3>
+                <p id="profileUsername" class="text-xs text-[#00FF66] font-mono">@username</p>
+                <span id="profileSyllabusBadge" class="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-[#00FF66]/10 text-[#00FF66] text-[10px] font-semibold border border-[#00FF66]/30">IGCSE Syllabus</span>
+              </div>
+            </div>
+
+            <div class="space-y-4 pt-4 border-t border-[#1F2E3D]">
+              <div>
+                <label class="block text-xs font-medium text-slate-400 mb-1">Display Name</label>
+                <input type="text" id="editProfileName" class="w-full bg-[#0B0F12] border border-[#1F2E3D] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#00FF66]">
+              </div>
+
+              <button onclick="saveProfileChanges()" class="w-full py-3 bg-[#00FF66] text-slate-950 font-bold rounded-xl hover:bg-[#00e65c] transition text-sm">
+                Save Profile Changes
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-[#141F28] border border-[#1F2E3D] rounded-2xl p-6">
+            <h4 class="text-sm font-semibold text-white mb-2">Account Security</h4>
+            <button onclick="logout()" class="px-4 py-2 bg-red-500/10 border border-red-500/30 text-red-400 font-semibold rounded-xl text-xs hover:bg-red-500/20 transition">
+              Sign Out of Account
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL: DIRECT CHAT WITH ACCEPTED FRIEND -->
+  <div id="directChatModal" class="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="w-full max-w-lg bg-[#141F28] border border-[#1F2E3D] rounded-2xl overflow-hidden flex flex-col h-[500px]">
+      <div class="px-5 py-3 bg-[#18222D] border-b border-[#1F2E3D] flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div id="dmFriendAvatar" class="w-8 h-8 rounded-full bg-[#00FF66]/20 border border-[#00FF66] text-[#00FF66] text-xs font-bold flex items-center justify-center">?</div>
+          <div>
+            <h4 id="dmFriendName" class="text-sm font-bold text-white">Friend Name</h4>
+            <p class="text-[10px] text-[#00FF66]">Accepted Peer • Online</p>
+          </div>
+        </div>
+        <button onclick="closeDirectChat()" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div id="dmMessagesContainer" class="flex-1 p-4 overflow-y-auto space-y-3 bg-[#0B0F12]"></div>
+
+      <form onsubmit="handleSendDirectMessage(event)" class="p-3 bg-[#141F28] border-t border-[#1F2E3D] flex gap-2">
+        <input type="text" id="dmInput" placeholder="Write a message to your friend..." class="flex-1 bg-[#0B0F12] border border-[#1F2E3D] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#00FF66]">
+        <button type="submit" class="px-4 bg-[#00FF66] text-slate-950 font-bold rounded-xl text-xs hover:bg-[#00e65c]">
+          Send
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- OVERLAY: LIVE VOICE AUDIO CALL INTERFACE -->
+  <div id="voiceCallOverlay" class="fixed inset-0 z-50 bg-[#0B0F12]/95 backdrop-blur-lg flex flex-col items-center justify-between p-6 hidden">
+    <div class="w-full max-w-2xl flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-[#00FF66] animate-ping"></span>
+        <span id="callPartnerLabel" class="text-sm font-bold text-white">Calling AI Tutor...</span>
+      </div>
+      <div id="callTimer" class="px-3 py-1 bg-[#141F28] border border-[#1F2E3D] rounded-full text-xs font-mono text-[#00FF66]">
+        00:00
+      </div>
+    </div>
+
+    <!-- Center Audio Waveform Visualizer -->
+    <div class="flex flex-col items-center justify-center space-y-6 my-auto">
+      <div id="callAvatar" class="w-28 h-28 rounded-full bg-[#00FF66]/10 border-2 border-[#00FF66] flex items-center justify-center text-[#00FF66] shadow-2xl pulse-glow">
+        <i data-lucide="bot" class="w-12 h-12"></i>
+      </div>
+
+      <div class="text-center space-y-1">
+        <p id="callStatusText" class="text-base font-semibold text-white">Live Voice Connection Active</p>
+        <p class="text-xs text-slate-400">Speak clearly. Multilingual speech recognition active.</p>
+      </div>
+
+      <div class="w-full max-w-md h-20 bg-[#141F28] border border-[#1F2E3D] rounded-2xl overflow-hidden p-2 relative flex items-center justify-center">
+        <canvas id="waveformCanvas" width="400" height="70" class="w-full h-full"></canvas>
+      </div>
+
+      <div class="w-full max-w-md h-24 bg-[#141F28]/80 border border-[#1F2E3D] rounded-xl p-3 overflow-y-auto text-xs text-slate-300 font-mono" id="callTranscriptLog">
+        <p class="text-slate-500">[System] Voice channel active. Start speaking...</p>
+      </div>
+    </div>
+
+    <!-- Call Control Buttons -->
+    <div class="flex items-center gap-6 mb-6">
+      <button id="btnMuteMic" onclick="toggleMic()" class="w-14 h-14 rounded-full bg-[#141F28] border border-[#1F2E3D] hover:border-[#00FF66] text-white flex items-center justify-center transition">
+        <i data-lucide="mic" class="w-6 h-6"></i>
+      </button>
+
+      <button onclick="endVoiceCall()" class="w-16 h-16 rounded-full bg-red-600 hover:bg-red-500 text-white flex items-center justify-center shadow-lg transition transform hover:scale-105">
+        <i data-lucide="phone-off" class="w-7 h-7"></i>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Application State
+    let currentUser = null;
+    let currentCurriculum = 'IGCSE';
+    let currentLanguage = 'en';
+    let activeView = 'tutor';
+    let activeFriendTab = 'my-friends';
+
+    // Multilingual Translations Dictionary
+    const i18nData = {
+      en: {
+        authSub: "Sign in or create an account to access universal global learning with GuidePost, connect with friends, and start AI voice calls.",
+        lblUser: "Username or Email",
+        lblPass: "Password",
+        btnSignIn: "Sign In to Continue",
+        lblLang: "Language / اللغة",
+        lblCurrTitle: "Curriculum / Field:",
+        navTutor: "Universal AI Assistant",
+        navFriends: "Friends Network",
+        navProfile: "Account Profile",
+        bannerCall: "Live AI Voice Tutor Session",
+        btnCall: "Start Voice Call",
+        topBtnCall: "Voice Call",
+        welcomeMsg: "Welcome to GuidePost! Ask me anything across high school subjects, university majors, post-secondary qualifications, or vocational paths. What would you like to learn today?",
+        btnSend: "Send",
+        friendsTitle: "Friend Connections & Collaboration",
+        friendsSub: "Send requests and accept peers to unlock direct messaging and audio calls."
+      },
+      sw: {
+        authSub: "Ingia au fungua akaunti ili kufikia mafunzo ya kimataifa kupitia GuidePost, kuwasiliana na marafiki, na kuanza simu za sauti za AI.",
+        lblUser: "Jina la Mtumiaji au Barua Pepe",
+        lblPass: "Nenosiri",
+        btnSignIn: "Ingia ili Kuendelea",
+        lblLang: "Lugha / Language",
+        lblCurrTitle: "Mtaala / Sekta:",
+        navTutor: "Msaidizi wa AI wa Kimataifa",
+        navFriends: "Mtandao wa Marafiki",
+        navProfile: "Profaili ya Akaunti",
+        bannerCall: "Kipindi cha Sauti cha AI",
+        btnCall: "Anzisha Simu ya Sauti",
+        topBtnCall: "Simu ya Sauti",
+        welcomeMsg: "Karibu GuidePost! Niulize chochote kuhusu masomo ya shule ya sekondari, shahada za chuo kikuu, kozi za ufundi au fani mbalimbali. Unataka kujifunza nini leo?",
+        btnSend: "Tuma",
+        friendsTitle: "Uhusiano na Marafiki",
+        friendsSub: "Tuma maombi na ukubali marafiki ili kufungua ujumbe wa moja kwa moja na simu za sauti."
+      },
+      es: {
+        authSub: "Inicia sesión o crea una cuenta para acceder al aprendizaje global universal en GuidePost, interactuar con amigos y realizar llamadas de voz con IA.",
+        lblUser: "Usuario o Correo Electrónico",
+        lblPass: "Contraseña",
+        btnSignIn: "Iniciar Sesión",
+        lblLang: "Idioma / Language",
+        lblCurrTitle: "Plan de Estudios / Carrera:",
+        navTutor: "Asistente de IA Universal",
+        navFriends: "Red de Amigos",
+        navProfile: "Perfil de Cuenta",
+        bannerCall: "Sesión de Voz IA en Vivo",
+        btnCall: "Iniciar Llamada de Voz",
+        topBtnCall: "Llamada de Voz",
+        welcomeMsg: "¡Bienvenido a GuidePost! Pregúntame sobre cualquier materia secundaria, carrera universitaria o formación profesional. ¿Qué te gustaría aprender hoy?",
+        btnSend: "Enviar",
+        friendsTitle: "Conexiones de Amigos",
+        friendsSub: "Envía solicitudes y acepta compañeros para desbloquear mensajes directos y llamadas."
+      },
+      fr: {
+        authSub: "Connectez-vous ou créez un compte sur GuidePost pour accéder à l'apprentissage mondial universel, échanger avec vos amis et passer des appels vocaux IA.",
+        lblUser: "Nom d'utilisateur ou E-mail",
+        lblPass: "Mot de passe",
+        btnSignIn: "Se Connecter",
+        lblLang: "Langue / Language",
+        lblCurrTitle: "Programme / Domaine:",
+        navTutor: "Assistant IA Universel",
+        navFriends: "Réseau d'Amis",
+        navProfile: "Profil du Compte",
+        bannerCall: "Session Vocale IA en Direct",
+        btnCall: "Démarrer l'Appel",
+        topBtnCall: "Appel Vocal",
+        welcomeMsg: "Bienvenue sur GuidePost ! Posez-moi des questions sur le lycée, las filières universitaires, ou la formation professionnelle. Que souhaitez-vous apprendre aujourd'hui ?",
+        btnSend: "Envoyer",
+        friendsTitle: "Réseau et Amis",
+        friendsSub: "Envoyez des demandes et acceptez des amis pour débloquer la messagerie directe."
+      },
+      ar: {
+        authSub: "قم بتسجيل الدخول أو إنشاء حساب للوصول إلى التعلم العالمي الشامل على GuidePost والتفاعل مع الأصدقاء.",
+        lblUser: "اسم المستخدم أو البريد الإلكتروني",
+        lblPass: "كلمة المرور",
+        btnSignIn: "تسجيل الدخول",
+        lblLang: "اللغة / Language",
+        lblCurrTitle: "المنهج الدراسي / المجال:",
+        navTutor: "مساعد الذكاء الاصطناعي الشامل",
+        navFriends: "شبكة الأصدقاء",
+        navProfile: "ملف الحساب",
+        bannerCall: "جلسة صوتية مباشرة",
+        btnCall: "بدء المكالمة الصوتية",
+        topBtnCall: "مكالمة صوتية",
+        welcomeMsg: "مرحبًا بك في GuidePost! اسألني عن أي موضوع دراسي في الثانوية العامة، التخصصات الجامعية، أو التدريب المهني. ماذا تحب أن تتعلم اليوم؟",
+        btnSend: "إرسال",
+        friendsTitle: "اتصالات الأصدقاء",
+        friendsSub: "أرسل الطلبات واقبل الأصدقاء لفتح الرسائل المباشرة والمكالمات الصوتية."
+      }
+    };
+
+    // Simulated Friends Database (Must be ACCEPTED to interact)
+    let friendsData = [
+      { id: 'f1', username: 'Alex_Student', name: 'Alex Johnson', curriculum: 'IGCSE', status: 'ACCEPTED', avatar: 'A' },
+      { id: 'f2', username: 'Brenda_CBC', name: 'Brenda Wanjiru', curriculum: 'CBC', status: 'ACCEPTED', avatar: 'B' },
+      { id: 'f3', username: 'CS_Major', name: 'David Chen', curriculum: 'UNI_CS', status: 'ACCEPTED', avatar: 'D' },
+      { id: 'f4', username: 'Dev_Tech', name: 'Dev Patel', curriculum: 'CBSE', status: 'PENDING_INCOMING', avatar: 'P' },
+      { id: 'f5', username: 'Sarah_AP', name: 'Sarah Miller', curriculum: 'US_AP', status: 'SUGGESTED', avatar: 'S' }
+    ];
+
+    let directMessages = {
+      'Alex_Student': [{ sender: 'Alex_Student', text: 'Hey! Ready to revise for the ICT exams?' }],
+      'Brenda_CBC': [{ sender: 'Brenda_CBC', text: 'Hi! Can we collaborate on our digital presentation?' }],
+      'CS_Major': [{ sender: 'CS_Major', text: 'Hey! Let me know if you need help with Data Structures & Algorithms.' }]
+    };
+
+    let activeDMUser = null;
+    let isCallActive = false;
+    let isMuted = false;
+    let callTimerInterval = null;
+    let callSeconds = 0;
+
+    window.onload = function() {
+      lucide.createIcons();
+      checkAuthSession();
+    };
+
+    function changeLanguage(langCode) {
+      currentLanguage = langCode;
+      const t = i18nData[langCode] || i18nData['en'];
+
+      if (langCode === 'ar') {
+        document.documentElement.dir = 'rtl';
+      } else {
+        document.documentElement.dir = 'ltr';
+      }
+
+      document.getElementById('i18n-auth-sub').innerText = t.authSub;
+      document.getElementById('i18n-lbl-user').innerText = t.lblUser;
+      document.getElementById('i18n-lbl-pass').innerText = t.lblPass;
+      document.getElementById('i18n-btn-signin').innerText = t.btnSignIn;
+      document.getElementById('i18n-lbl-lang').innerText = t.lblLang;
+      document.getElementById('i18n-lbl-curr-title').innerText = t.lblCurrTitle;
+      document.getElementById('i18n-nav-tutor').innerText = t.navTutor;
+      document.getElementById('i18n-nav-friends').innerText = t.navFriends;
+      document.getElementById('i18n-nav-profile').innerText = t.navProfile;
+      document.getElementById('i18n-banner-call').innerText = t.bannerCall;
+      document.getElementById('i18n-btn-call').innerText = t.btnCall;
+      document.getElementById('i18n-top-btn-call').innerText = t.topBtnCall;
+      document.getElementById('i18n-welcome-msg').innerText = t.welcomeMsg;
+      document.getElementById('i18n-btn-send').innerText = t.btnSend;
+      document.getElementById('i18n-friends-title').innerText = t.friendsTitle;
+      document.getElementById('i18n-friends-sub').innerText = t.friendsSub;
+    }
+
+    function setGlobalCurriculum(val) {
+      currentCurriculum = val;
+      const badge = document.getElementById('curriculumBadge');
+      badge.innerText = val;
+      document.getElementById('tutorSyllabusSub').innerText = "Active Field: " + val;
+    }
+
+    /* AUTHENTICATION LOGIC */
+    function checkAuthSession() {
+      const savedUser = localStorage.getItem('guidepost_user');
+      if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        hideAuthModal();
+        updateUserProfileUI();
+      } else {
+        showAuthModal();
+      }
+    }
+
+    function showAuthModal() { document.getElementById('authOverlay').classList.remove('hidden'); }
+    function hideAuthModal() { document.getElementById('authOverlay').classList.add('hidden'); }
+
+    function switchAuthTab(tab) {
+      if (tab === 'signin') {
+        document.getElementById('signInForm').classList.remove('hidden');
+        document.getElementById('signUpForm').classList.add('hidden');
+      } else {
+        document.getElementById('signInForm').classList.add('hidden');
+        document.getElementById('signUpForm').classList.remove('hidden');
+      }
+    }
+
+    function handleAuth(e, type) {
+      e.preventDefault();
+      if (type === 'signin') {
+        const username = document.getElementById('authUsernameInput').value || 'StudentUser';
+        currentUser = { username: username, name: username.replace('_', ' '), curriculum: currentCurriculum, avatar: username.charAt(0).toUpperCase() };
+      } else {
+        const name = document.getElementById('signUpName').value || 'New Student';
+        const username = document.getElementById('signUpUsername').value || 'Learner1';
+        const curr = document.getElementById('signUpCurriculum').value;
+        currentUser = { username: username, name: name, curriculum: curr, avatar: name.charAt(0).toUpperCase() };
+        setGlobalCurriculum(curr);
+      }
+      localStorage.setItem('guidepost_user', JSON.stringify(currentUser));
+      hideAuthModal();
+      updateUserProfileUI();
+      renderFriendsUI();
+    }
+
+    function quickDemoLogin() {
+      currentUser = { username: 'Alex_Student', name: 'Alex Student', curriculum: 'IGCSE', avatar: 'A' };
+      localStorage.setItem('guidepost_user', JSON.stringify(currentUser));
+      hideAuthModal();
+      updateUserProfileUI();
+      renderFriendsUI();
+    }
+
+    function logout() {
+      localStorage.removeItem('guidepost_user');
+      currentUser = null;
+      showAuthModal();
+    }
+
+    function updateUserProfileUI() {
+      if (!currentUser) return;
+      document.getElementById('userNameSmall').innerText = currentUser.name;
+      document.getElementById('userTagSmall').innerText = '@' + currentUser.username;
+      document.getElementById('userAvatarSmall').innerText = currentUser.avatar;
+      document.getElementById('profileName').innerText = currentUser.name;
+      document.getElementById('profileUsername').innerText = '@' + currentUser.username;
+      document.getElementById('profileAvatarBig').innerText = currentUser.avatar;
+      document.getElementById('editProfileName').value = currentUser.name;
+      document.getElementById('profileSyllabusBadge').innerText = currentCurriculum + " Track";
+    }
+
+    function saveProfileChanges() {
+      if (!currentUser) return;
+      const newName = document.getElementById('editProfileName').value.trim();
+      if (newName) {
+        currentUser.name = newName;
+        localStorage.setItem('guidepost_user', JSON.stringify(currentUser));
+        updateUserProfileUI();
+        alert('Profile details updated successfully!');
+      }
+    }
+
+    /* NAVIGATION SWITCHER */
+    function switchView(viewName) {
+      activeView = viewName;
+      document.getElementById('view-tutor').classList.add('hidden');
+      document.getElementById('view-friends').classList.add('hidden');
+      document.getElementById('view-profile').classList.add('hidden');
+
+      if (viewName === 'tutor') document.getElementById('view-tutor').classList.remove('hidden');
+      else if (viewName === 'friends') {
+        document.getElementById('view-friends').classList.remove('hidden');
+        renderFriendsUI();
+      } else if (viewName === 'profile') document.getElementById('view-profile').classList.remove('hidden');
+    }
+
+    /* FRIEND NETWORK (ACCEPTED FRIENDS ONLY) */
+    function switchFriendTab(tab) {
+      activeFriendTab = tab;
+      document.getElementById('subViewMyFriends').classList.add('hidden');
+      document.getElementById('subViewRequests').classList.add('hidden');
+      document.getElementById('subViewAddFriends').classList.add('hidden');
+
+      if (tab === 'my-friends') document.getElementById('subViewMyFriends').classList.remove('hidden');
+      else if (tab === 'requests') document.getElementById('subViewRequests').classList.remove('hidden');
+      else if (tab === 'add') document.getElementById('subViewAddFriends').classList.remove('hidden');
+    }
+
+    function renderFriendsUI() {
+      const acceptedContainer = document.getElementById('connectedFriendsList');
+      const pendingContainer = document.getElementById('pendingRequestsList');
+      const suggestedContainer = document.getElementById('suggestedFriendsList');
+
+      acceptedContainer.innerHTML = '';
+      pendingContainer.innerHTML = '';
+      suggestedContainer.innerHTML = '';
+
+      let pendingCount = 0;
+
+      friendsData.forEach(friend => {
+        if (friend.status === 'ACCEPTED') {
+          acceptedContainer.innerHTML += `
+            <div class="bg-[#141F28] border border-[#1F2E3D] rounded-2xl p-4 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-[#00FF66]/20 border border-[#00FF66] text-[#00FF66] font-bold flex items-center justify-center">${friend.avatar}</div>
+                <div>
+                  <h4 class="font-bold text-white text-sm">${friend.name}</h4>
+                  <p class="text-[11px] text-slate-400">@${friend.username} • <span class="text-[#00FF66]">${friend.curriculum}</span></p>
+                </div>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="openDirectChat('${friend.username}')" class="px-3 py-1.5 bg-[#18222D] text-[#00FF66] rounded-xl text-xs font-semibold">Chat</button>
+                <button onclick="startVoiceCall('${friend.name}')" class="px-3 py-1.5 bg-[#00FF66] text-slate-950 rounded-xl text-xs font-bold neon-glow-btn">Call</button>
+              </div>
+            </div>
+          `;
+        } else if (friend.status === 'PENDING_INCOMING') {
+          pendingCount++;
+          pendingContainer.innerHTML += `
+            <div class="bg-[#141F28] border border-[#00FF66]/40 rounded-2xl p-4 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-[#00FF66]/10 text-white font-bold flex items-center justify-center">${friend.avatar}</div>
+                <div>
+                  <h4 class="font-bold text-white text-sm">${friend.name}</h4>
+                  <p class="text-[11px] text-slate-400">Sent request • @${friend.username}</p>
+                </div>
+              </div>
+              <button onclick="acceptFriendRequest('${friend.id}')" class="px-4 py-2 bg-[#00FF66] text-slate-950 font-bold rounded-xl text-xs">Accept</button>
+            </div>
+          `;
+        } else if (friend.status === 'SUGGESTED') {
+          suggestedContainer.innerHTML += `
+            <div class="bg-[#141F28] border border-[#1F2E3D] rounded-2xl p-4 text-center">
+              <h4 class="font-bold text-white text-sm">${friend.name}</h4>
+              <p class="text-[11px] text-slate-400 mb-3">@${friend.username}</p>
+              <button onclick="sendFriendRequest('${friend.id}')" class="w-full py-2 bg-[#18222D] text-slate-300 rounded-xl text-xs border border-[#1F2E3D] hover:border-[#00FF66]">Add Friend</button>
+            </div>
+          `;
+        }
+      });
+
+      const badge = document.getElementById('pendingBadge');
+      const reqBadge = document.getElementById('fTabReqBadge');
+      if (pendingCount > 0) {
+        badge.innerText = pendingCount;
+        badge.classList.remove('hidden');
+        reqBadge.innerText = pendingCount;
+        reqBadge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+        reqBadge.classList.add('hidden');
+      }
+
+      lucide.createIcons();
+    }
+
+    function acceptFriendRequest(id) {
+      const friend = friendsData.find(f => f.id === id);
+      if (friend) { friend.status = 'ACCEPTED'; renderFriendsUI(); }
+    }
+
+    function sendFriendRequest(id) {
+      const friend = friendsData.find(f => f.id === id);
+      if (friend) {
+        friend.status = 'PENDING_OUTGOING';
+        alert('Friend request sent! Unlocks direct connection after acceptance.');
+        renderFriendsUI();
+        setTimeout(() => { friend.status = 'ACCEPTED'; renderFriendsUI(); }, 2500);
+      }
+    }
+
+    function searchAndAddFriend() {
+      const input = document.getElementById('friendSearchInput').value.trim();
+      if (!input) return;
+      alert('Request sent to ' + input + '. Must be accepted before messaging.');
+      document.getElementById('friendSearchInput').value = '';
+    }
+
+    /* DIRECT CHAT MODAL */
+    function openDirectChat(username) {
+      const friend = friendsData.find(f => f.username === username);
+      if (!friend || friend.status !== 'ACCEPTED') return;
+      activeDMUser = friend;
+      document.getElementById('dmFriendName').innerText = friend.name;
+      document.getElementById('dmFriendAvatar').innerText = friend.avatar;
+      renderDMMessages();
+      document.getElementById('directChatModal').classList.remove('hidden');
+    }
+
+    function closeDirectChat() { document.getElementById('directChatModal').classList.add('hidden'); }
+
+    function renderDMMessages() {
+      if (!activeDMUser) return;
+      const container = document.getElementById('dmMessagesContainer');
+      container.innerHTML = '';
+      const msgs = directMessages[activeDMUser.username] || [];
+      msgs.forEach(msg => {
+        const isMe = msg.sender === 'me';
+        container.innerHTML += `
+          <div class="flex ${isMe ? 'justify-end' : 'justify-start'}">
+            <div class="max-w-[80%] ${isMe ? 'bg-[#00FF66] text-slate-950 font-medium' : 'bg-[#18222D] text-slate-200'} p-3 rounded-2xl text-xs">
+              <p>${msg.text}</p>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function handleSendDirectMessage(e) {
+      e.preventDefault();
+      const input = document.getElementById('dmInput');
+      const text = input.value.trim();
+      if (!text || !activeDMUser) return;
+      if (!directMessages[activeDMUser.username]) directMessages[activeDMUser.username] = [];
+      directMessages[activeDMUser.username].push({ sender: 'me', text: text });
+      input.value = '';
+      renderDMMessages();
+    }
+
+    /* UNIVERSAL AI KNOWLEDGE ENGINE */
+    function handleSendMessage(e) {
+      e.preventDefault();
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendChatMessage('user', currentUser ? currentUser.name : 'Student', text);
+      input.value = '';
+
+      setTimeout(() => {
+        const reply = generateUniversalAIResponse(text, currentCurriculum, currentLanguage);
+        appendChatMessage('ai', 'GuidePost AI', reply);
+      }, 900);
+    }
+
+    function generateUniversalAIResponse(query, field, lang) {
+      const q = query.toLowerCase();
+      let prefix = `[Track: ${field} | Lang: ${lang.toUpperCase()}] `;
+
+      // Post-High School STEM
+      if (field.startsWith('UNI_CS') || field.startsWith('UNI_SE') || field.startsWith('UNI_CYBER') || field.startsWith('UNI_DATA')) {
+        if (q.includes('algorithm') || q.includes('code') || q.includes('data')) {
+          return prefix + "In higher education Computer Science, we focus on algorithmic time complexity O(n), data structures (trees, graphs, hash tables), software engineering principles, and modular system design. Let's break down this concept step-by-step with practical pseudo-implementation!";
+        }
+        return prefix + "Under University Computer Science & Engineering, we analyze computational theory, operating systems, cloud architecture, and cybersecurity principles. How can I help you master this specific module?";
+      }
+
+      // Post-High School Business & Finance
+      if (field.startsWith('UNI_BIZ') || field.startsWith('UNI_FINANCE') || field.startsWith('UNI_MARKETING')) {
+        return prefix + "In University Business & Financial Management, we analyze capital structure, balance sheet accounting, market positioning, and metrics like EBITDA and Net Present Value (NPV). Let's review the practical case study behind your question!";
+      }
+
+      // Post-High School Medicine & Healthcare
+      if (field.startsWith('UNI_MED') || field.startsWith('UNI_NURSING') || field.startsWith('UNI_PHARMA')) {
+        return prefix + "In Medical & Life Sciences education, we examine cellular physiology, pharmacology, anatomical structures, and clinical diagnostic workflows. Let's review this medical topic methodically.";
+      }
+
+      // Vocational & Trades
+      if (field.startsWith('VOC_') || field.startsWith('CERT_')) {
+        return prefix + "In Applied Engineering & Trades, real-world application, safety protocols, schematic reading, and hands-on diagnostic troubleshooting come first. Let me walk you through the practical step-by-step procedures.";
+      }
+
+      // High School Curricula (IGCSE, CBC, IB, AP, etc.)
+      if (q.includes('spreadsheet') || q.includes('excel') || q.includes('formula')) {
+        return prefix + "For spreadsheet logic across secondary ICT: Use functions like =SUM(), =AVERAGE(), =IF(condition, value_if_true, value_if_false), and =VLOOKUP(). Remember cell referencing ($A$1) for fixed lookups!";
+      }
+      if (q.includes('cyber') || q.includes('security') || q.includes('password') || q.includes('phishing')) {
+        return prefix + "Digital security principles: Always enable Multi-Factor Authentication (MFA), use unique passphrases, look out for domain spoofs in phishing emails, and maintain proper digital hygiene!";
+      }
+
+      return prefix + `Great question regarding "${query}". Tailored for your active track (${field}), here is the breakdown:\n1. Key Core Principles\n2. Real-World Practical Context\n3. Step-by-Step Practice Solution.\nWhat specific aspect would you like to explore next?`;
+    }
+
+    function appendChatMessage(role, name, text) {
+      const container = document.getElementById('chatMessagesContainer');
+      const isUser = role === 'user';
+      const div = document.createElement('div');
+      div.className = `flex gap-3 max-w-2xl ${isUser ? 'ml-auto flex-row-reverse' : ''}`;
+      div.innerHTML = `
+        <div class="w-8 h-8 rounded-lg ${isUser ? 'bg-[#00FF66] text-slate-950 font-bold' : 'bg-[#00FF66]/20 text-[#00FF66]'} flex items-center justify-center shrink-0 text-xs">
+          ${isUser ? (currentUser ? currentUser.avatar : 'S') : '<i data-lucide="bot" class="w-4 h-4"></i>'}
+        </div>
+        <div class="${isUser ? 'bg-[#00FF66] text-slate-950 font-medium' : 'bg-[#141F28] border border-[#1F2E3D] text-slate-200'} p-4 rounded-2xl text-sm leading-relaxed whitespace-pre-line">
+          <p class="font-semibold text-xs ${isUser ? 'text-slate-900' : 'text-[#00FF66]'}">${name}</p>
+          <p>${text}</p>
+        </div>
+      `;
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+      lucide.createIcons();
+    }
+
+    /* VOICE CALL INTERFACE & WAVEFORM CANVAS */
+    function startVoiceCall(partnerName) {
+      isCallActive = true;
+      document.getElementById('callPartnerLabel').innerText = 'Voice Call: ' + partnerName;
+      document.getElementById('voiceCallOverlay').classList.remove('hidden');
+      callSeconds = 0;
+      callTimerInterval = setInterval(() => {
+        callSeconds++;
+        const mins = String(Math.floor(callSeconds / 60)).padStart(2, '0');
+        const secs = String(callSeconds % 60).padStart(2, '0');
+        document.getElementById('callTimer').innerText = `${mins}:${secs}`;
+      }, 1000);
+      initWaveformCanvas();
+      speakText(`Voice channel connected for ${currentCurriculum} track. How can I help you today?`);
+    }
+
+    function endVoiceCall() {
+      isCallActive = false;
+      clearInterval(callTimerInterval);
+      document.getElementById('voiceCallOverlay').classList.add('hidden');
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+    }
+
+    function toggleMic() {
+      isMuted = !isMuted;
+      document.getElementById('btnMuteMic').className = isMuted 
+        ? "w-14 h-14 rounded-full bg-red-600/20 border border-red-500 text-red-400 flex items-center justify-center"
+        : "w-14 h-14 rounded-full bg-[#141F28] border border-[#1F2E3D] text-white flex items-center justify-center";
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.rate = 1.0;
+        utter.pitch = 1.0;
+        window.speechSynthesis.speak(utter);
+      }
+    }
+
+    function initWaveformCanvas() {
+      const canvas = document.getElementById('waveformCanvas');
+      const ctx = canvas.getContext('2d');
+      let step = 0;
+      function draw() {
+        if (!isCallActive) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = isMuted ? '#EF4444' : '#00FF66';
+        ctx.beginPath();
+        for (let x = 0; x < canvas.width; x += 5) {
+          const y = isMuted ? canvas.height / 2 : Math.sin((x + step) * 0.05) * 15 + canvas.height / 2;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        step += 2;
+        requestAnimationFrame(draw);
+      }
+      draw();
+    }
+  </script>
+</body>
+</html>
